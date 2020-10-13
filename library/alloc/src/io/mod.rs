@@ -249,17 +249,19 @@
 
 #![stable(feature = "rust1", since = "1.0.0")]
 
+use core::{marker::PhantomData};
+use core::ctypes::{c_void, iovec, iov_len_t};
+
 #[cfg(test)]
 mod tests;
 
-use crate::cmp;
-use crate::fmt;
-use crate::memchr;
-use crate::ops::{Deref, DerefMut};
-use crate::ptr;
-use crate::slice;
-use crate::str;
-use crate::sys;
+use core::cmp;
+use core::fmt;
+use core::slice::memchr;
+use core::ops::{Deref, DerefMut};
+use core::ptr;
+use core::slice;
+use core::str;
 
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use self::buffered::IntoInnerError;
@@ -270,15 +272,6 @@ pub use self::cursor::Cursor;
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use self::error::{Error, ErrorKind, Result};
 #[stable(feature = "rust1", since = "1.0.0")]
-pub use self::stdio::{stderr, stdin, stdout, Stderr, Stdin, Stdout};
-#[stable(feature = "rust1", since = "1.0.0")]
-pub use self::stdio::{StderrLock, StdinLock, StdoutLock};
-#[unstable(feature = "print_internals", issue = "none")]
-pub use self::stdio::{_eprint, _print};
-#[unstable(feature = "libstd_io_internals", issue = "42788")]
-#[doc(no_inline, hidden)]
-pub use self::stdio::{set_panic, set_print};
-#[stable(feature = "rust1", since = "1.0.0")]
 pub use self::util::{copy, empty, repeat, sink, Empty, Repeat, Sink};
 
 mod buffered;
@@ -286,8 +279,8 @@ mod cursor;
 mod error;
 mod impls;
 pub mod prelude;
-mod stdio;
 mod util;
+use crate::{vec::Vec, string::String};
 
 const DEFAULT_BUF_SIZE: usize = crate::sys_common::io::DEFAULT_BUF_SIZE;
 

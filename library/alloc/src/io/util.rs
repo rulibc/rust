@@ -3,9 +3,9 @@
 #[cfg(test)]
 mod tests;
 
-use crate::fmt;
+use core::fmt;
 use crate::io::{self, BufRead, ErrorKind, Initializer, IoSlice, IoSliceMut, Read, Write};
-use crate::mem::MaybeUninit;
+use core::mem::MaybeUninit;
 
 /// Copies the entire contents of a reader into a writer.
 ///
