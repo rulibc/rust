@@ -37,7 +37,8 @@ pub use pwd::*;
           target_arch = "riscv32",
           target_arch = "riscv64"))]
 mod ad {
-    pub type c_char = ::c_uchar;
+    use super::c_uchar;
+    pub type c_char = c_uchar;
 
     pub type c_int = i32;
     pub type c_uint = u32;
@@ -52,7 +53,8 @@ mod ad {
           target_arch = "nvptx64",
           target_arch = "xtensa"))]
 mod ad {
-    pub type c_char = ::c_schar;
+    use super::c_schar;
+    pub type c_char = c_schar;
 
     pub type c_int = i32;
     pub type c_uint = u32;
@@ -60,7 +62,8 @@ mod ad {
 
 #[cfg(target_arch = "msp430")]
 mod ad {
-    pub type c_char = ::c_uchar;
+    use super::c_uchar;
+    pub type c_char = c_uchar;
 
     pub type c_int = i16;
     pub type c_uint = u16;
@@ -136,7 +139,7 @@ pub type intptr_t = isize;
 pub type uintptr_t = usize;
 pub type ssize_t = isize;
 
-pub type c_void = core::ffi::c_void;
+pub type c_void = crate::ffi::c_void;
 
 //===================================================================
 // struct iovec, iov_len_t
