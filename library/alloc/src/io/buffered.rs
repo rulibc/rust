@@ -5,13 +5,12 @@ mod tests;
 
 use crate::io::prelude::*;
 
-use crate::cmp;
-use crate::error;
-use crate::fmt;
+use core::cmp;
+use core::fmt;
 use crate::io::{
     self, Error, ErrorKind, Initializer, IoSlice, IoSliceMut, SeekFrom, DEFAULT_BUF_SIZE,
 };
-use crate::memchr;
+use crate::io::memchr;
 
 /// The `BufReader<R>` struct adds buffering to any reader.
 ///
@@ -301,7 +300,7 @@ impl<R: Read> Read for BufReader<R> {
 
     // we can't skip unconditionally because of the large buffer case in read.
     unsafe fn initializer(&self) -> Initializer {
-        self.inner.initializer()
+        unsafe { self.inner.initializer() }
     }
 }
 
@@ -919,14 +918,6 @@ impl<W> IntoInnerError<W> {
 impl<W> From<IntoInnerError<W>> for Error {
     fn from(iie: IntoInnerError<W>) -> Error {
         iie.1
-    }
-}
-
-#[stable(feature = "rust1", since = "1.0.0")]
-impl<W: Send + fmt::Debug> error::Error for IntoInnerError<W> {
-    #[allow(deprecated, deprecated_in_future)]
-    fn description(&self) -> &str {
-        error::Error::description(self.error())
     }
 }
 

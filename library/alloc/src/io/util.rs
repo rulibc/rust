@@ -3,9 +3,9 @@
 #[cfg(test)]
 mod tests;
 
-use crate::fmt;
+use core::fmt;
 use crate::io::{self, BufRead, ErrorKind, Initializer, IoSlice, IoSliceMut, Read, Write};
-use crate::mem::MaybeUninit;
+use core::mem::MaybeUninit;
 
 /// Copies the entire contents of a reader into a writer.
 ///
@@ -115,7 +115,7 @@ impl Read for Empty {
 
     #[inline]
     unsafe fn initializer(&self) -> Initializer {
-        Initializer::nop()
+        unsafe { Initializer::nop() }
     }
 }
 #[stable(feature = "rust1", since = "1.0.0")]
@@ -189,7 +189,7 @@ impl Read for Repeat {
 
     #[inline]
     unsafe fn initializer(&self) -> Initializer {
-        Initializer::nop()
+        unsafe { Initializer::nop() }
     }
 }
 

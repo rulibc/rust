@@ -114,6 +114,8 @@
 #![feature(or_patterns)]
 #![feature(pattern)]
 #![feature(ptr_internals)]
+#![feature(slice_internals)]
+#![feature(doc_spotlight)]
 #![feature(raw_ref_op)]
 #![feature(rustc_attrs)]
 #![feature(receiver_trait)]
@@ -180,6 +182,7 @@ pub mod task;
 #[cfg(test)]
 mod tests;
 pub mod vec;
+pub mod io;
 
 #[cfg(not(test))]
 mod std {

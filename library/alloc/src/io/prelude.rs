@@ -12,3 +12,10 @@
 
 #[stable(feature = "rust1", since = "1.0.0")]
 pub use super::{BufRead, Read, Seek, Write};
+
+#[stable(feature = "rust1", since = "1.0.0")]
+pub use crate::boxed::Box;
+#[stable(feature = "rust1", since = "1.0.0")]
+pub use crate::vec::Vec;
+#[stable(feature = "rust1", since = "1.0.0")]
+pub use crate::string::String;
