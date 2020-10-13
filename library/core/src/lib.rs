@@ -260,6 +260,8 @@ pub mod task;
 #[allow(missing_docs)]
 pub mod alloc;
 
+pub mod ctypes;
+
 // note: does not need to be public
 mod bool;
 mod tuple;
