@@ -7,19 +7,24 @@
 
 #![allow(non_camel_case_types)]
 #![deny(warnings)]
-#![no_std]
 
 // AD = Architecture dependent
+#[stable(feature = "core_primitive", since = "1.43.0")]
 pub use ad::*;
 // OD = OS dependent
+#[stable(feature = "core_primitive", since = "1.43.0")]
 pub use od::*;
 // OD IOVEC = OS dependent iovec
+#[stable(feature = "core_primitive", since = "1.43.0")]
 pub use od_iovec::*;
 // OD wchar = OS dependent wchar_t
+#[stable(feature = "core_primitive", since = "1.43.0")]
 pub use od_wchar::*;
 // OD wint = OS dependent wint_t
+#[stable(feature = "core_primitive", since = "1.43.0")]
 pub use od_wint::*;
 // PWD = Pointer Width Dependent
+#[stable(feature = "core_primitive", since = "1.43.0")]
 pub use pwd::*;
 
 //===================================================================
@@ -38,9 +43,12 @@ pub use pwd::*;
           target_arch = "riscv64"))]
 mod ad {
     use super::c_uchar;
+    #[stable(feature = "rust1", since = "1.0.0")]
     pub type c_char = c_uchar;
 
+    #[stable(feature = "rust1", since = "1.0.0")]
     pub type c_int = i32;
+    #[stable(feature = "rust1", since = "1.0.0")]
     pub type c_uint = u32;
 }
 
@@ -54,18 +62,24 @@ mod ad {
           target_arch = "xtensa"))]
 mod ad {
     use super::c_schar;
+    #[stable(feature = "rust1", since = "1.0.0")]
     pub type c_char = c_schar;
 
+    #[stable(feature = "rust1", since = "1.0.0")]
     pub type c_int = i32;
+    #[stable(feature = "rust1", since = "1.0.0")]
     pub type c_uint = u32;
 }
 
 #[cfg(target_arch = "msp430")]
 mod ad {
     use super::c_uchar;
+    #[stable(feature = "rust1", since = "1.0.0")]
     pub type c_char = c_uchar;
 
+    #[stable(feature = "rust1", since = "1.0.0")]
     pub type c_int = i16;
+    #[stable(feature = "rust1", since = "1.0.0")]
     pub type c_uint = u16;
 }
 
@@ -81,27 +95,37 @@ mod ad {
 mod od {
 #[cfg(any(target_pointer_width = "16",
           target_pointer_width = "32"))]
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_long = i32;
 #[cfg(any(target_pointer_width = "16",
           target_pointer_width = "32"))]
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_ulong = u32;
 
 #[cfg(target_pointer_width = "64")]
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_long = i64;
 #[cfg(target_pointer_width = "64")]
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_ulong = u64;
 }
 
 #[cfg(any(target_os = "windows"))]
+#[stable(feature = "rust1", since = "1.0.0")]
 mod od {
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_long = i32;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_ulong = u32;
 }
 
 #[cfg(any(target_os = "redox",
           target_os = "solaris"))]
+#[stable(feature = "rust1", since = "1.0.0")]
 mod od {
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_long = i64;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_ulong = u64;
 }
 
@@ -109,36 +133,60 @@ pub type c_ulong = u64;
 // int8_t to c_void, all platform are the same
 //===================================================================
 
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type int8_t = i8;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type int16_t = i16;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type int32_t = i32;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type int64_t = i64;
 
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type uint8_t = u8;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type uint16_t = u16;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type uint32_t = u32;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type uint64_t = u64;
 
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_schar = i8;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_short = i16;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_longlong = i64;
 
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_uchar = u8;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_ushort = u16;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_ulonglong = u64;
 
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_float = f32;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_double = f64;
 
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type intmax_t = i64;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type uintmax_t = u64;
 
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type size_t = usize;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type ptrdiff_t = isize;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type intptr_t = isize;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type uintptr_t = usize;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type ssize_t = isize;
 
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type c_void = crate::ffi::c_void;
 
 //===================================================================
@@ -153,14 +201,19 @@ pub type c_void = crate::ffi::c_void;
           target_os = "windows")))]
 mod od_iovec {
 use super::size_t;
+#[stable(feature = "rust1", since = "1.0.0")]
 use super::c_void;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type iov_len_t = size_t;
 /// Refer to https://pubs.opengroup.org/onlinepubs/009695399/basedefs/sys/uio.h.html
 /// Refer to https://github.com/kraj/glibc/blob/master/misc/bits/types/struct_iovec.h
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone,Debug)]
+#[stable(feature = "rust1", since = "1.0.0")]
 pub struct iovec {
+    #[stable(feature = "rust1", since = "1.0.0")]
     pub iov_base: *mut c_void,
+    #[stable(feature = "rust1", since = "1.0.0")]
     pub iov_len: iov_len_t,
 }
 }
@@ -170,11 +223,15 @@ mod od_iovec {
 use super::c_ulong;
 use super::c_void;
 /// Refer to https://docs.microsoft.com/en-us/windows/win32/api/ws2def/ns-ws2def-wsabuf
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type iov_len_t = c_ulong;
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone,Debug)]
+#[stable(feature = "rust1", since = "1.0.0")]
 pub struct iovec {
+    #[stable(feature = "rust1", since = "1.0.0")]
     pub iov_len: iov_len_t,
+    #[stable(feature = "rust1", since = "1.0.0")]
     pub iov_base: *mut c_void,
 }
 }
@@ -187,6 +244,7 @@ pub struct iovec {
           target_os = "vxworks")))]
 mod od_wchar {
 use super::int32_t;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type wchar_t = int32_t;
 }
 
@@ -194,6 +252,7 @@ pub type wchar_t = int32_t;
           target_os = "vxworks"))]
 mod od_wchar {
 use super::uint16_t;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type wchar_t = uint16_t;
 }
 
@@ -205,27 +264,34 @@ pub type wchar_t = uint16_t;
           target_os = "vxworks")))]
 mod od_wint {
 use super::uint32_t;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type wint_t = uint32_t;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub const WEOF: wint_t = 0xFFFF_FFFFu32;
 }
 
 #[cfg(any(target_os = "windows"))]
 mod od_wint {
 use super::uint16_t;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type wint_t = uint16_t;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub const WEOF: wint_t = 0xFFFFu16;
 }
 
 #[cfg(any(target_os = "vxworks"))]
 mod od_wint {
 use super::int32_t;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type wint_t = int32_t;
+#[stable(feature = "rust1", since = "1.0.0")]
 pub const WEOF: wint_t = -1i32;
 }
 
 //===================================================================
 // wctype_t TODO: This is os dependent
 //===================================================================
+#[stable(feature = "rust1", since = "1.0.0")]
 pub type wctype_t = i64;
 
 //===================================================================
