@@ -186,6 +186,9 @@ pub type uintptr_t = usize;
 #[stable(feature = "rust1", since = "1.0.0")]
 pub type ssize_t = isize;
 
+#[stable(feature = "core_primitive", since = "1.43.0")]
+pub type va_list<'a,'b> = super::ffi::VaList<'a, 'b>;
+
 #[stable(feature = "rust1", since = "1.0.0")]
 pub type c_void = crate::ffi::c_void;
 
