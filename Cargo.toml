@@ -94,6 +94,21 @@ rustc-std-workspace-core = { path = 'library/rustc-std-workspace-core' }
 rustc-std-workspace-alloc = { path = 'library/rustc-std-workspace-alloc' }
 rustc-std-workspace-std = { path = 'library/rustc-std-workspace-std' }
 
+
+winapi = {path="rulibc/winapi-rs" }
+rulibc = {path="rulibc/rulibc" }
+num-traits = {path="rulibc/num-traits"}
+cbitset = {path="rulibc/cbitset"}
+lazy_static = {path="rulibc/lazy-static.rs"}
+spin = {path="rulibc/spin-rs"}
+memchr = {path="rulibc/rust-memchr"}
+memoffset = {path="rulibc/memoffset"}
+rand = {path="rulibc/rand"}
+rand_core = {path="rulibc/rand/rand_core"}
+libm = {path="rulibc/libm"}
+rand_xorshift = {path="rulibc/rngs/rand_xorshift"}
+rand_jitter = {path="rulibc/rngs/rand_jitter"}
+
 # This crate's integration with libstd is a bit wonky, so we use a submodule
 # instead of a crates.io dependency. Make sure everything else in the repo is
 # also using the submodule, however, so we can avoid duplicate copies of the
