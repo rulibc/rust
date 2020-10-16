@@ -282,7 +282,7 @@ pub mod prelude;
 mod util;
 use crate::{vec::Vec, string::String};
 
-const DEFAULT_BUF_SIZE: usize = crate::sys_common::io::DEFAULT_BUF_SIZE;
+const DEFAULT_BUF_SIZE: usize = 8 * 1024;
 
 struct Guard<'a> {
     buf: &'a mut Vec<u8>,
@@ -942,7 +942,10 @@ pub trait Read {
 /// Windows.
 #[stable(feature = "iovec", since = "1.36.0")]
 #[repr(transparent)]
-pub struct IoSliceMut<'a>(sys::io::IoSliceMut<'a>);
+pub struct IoSliceMut<'a> {
+    vec: iovec,
+    _p: PhantomData<&'a [u8]>,
+}
 
 #[stable(feature = "iovec-send-sync", since = "1.44.0")]
 unsafe impl<'a> Send for IoSliceMut<'a> {}
@@ -953,7 +956,7 @@ unsafe impl<'a> Sync for IoSliceMut<'a> {}
 #[stable(feature = "iovec", since = "1.36.0")]
 impl<'a> fmt::Debug for IoSliceMut<'a> {
     fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Debug::fmt(self.0.as_slice(), fmt)
+        fmt::Debug::fmt(self.as_slice(), fmt)
     }
 }
 
@@ -966,7 +969,13 @@ impl<'a> IoSliceMut<'a> {
     #[stable(feature = "iovec", since = "1.36.0")]
     #[inline]
     pub fn new(buf: &'a mut [u8]) -> IoSliceMut<'a> {
-        IoSliceMut(sys::io::IoSliceMut::new(buf))
+        IoSliceMut {
+            vec: iovec {
+                iov_base: buf.as_mut_ptr() as *mut c_void,
+                iov_len: buf.len() as iov_len_t,
+            },
+            _p: PhantomData,
+        }
     }
 
     /// Advance the internal cursor of the slice.
@@ -1019,9 +1028,33 @@ impl<'a> IoSliceMut<'a> {
 
         let bufs = &mut bufs[remove..];
         if !bufs.is_empty() {
-            bufs[0].0.advance(n - accumulated_len)
+            bufs[0].advance_self(n - accumulated_len)
         }
         bufs
+    }
+
+    #[inline]
+    fn advance_self(&mut self, n: usize) {
+        if (self.vec.iov_len as usize) < n {
+            panic!("advancing IoSliceMut beyond its length");
+        }
+
+        unsafe {
+            self.vec.iov_len -= n as iov_len_t;
+            self.vec.iov_base = self.vec.iov_base.add(n);
+        }
+    }
+
+    #[inline]
+    fn as_slice(&self) -> &[u8] {
+        unsafe { slice::from_raw_parts(self.vec.iov_base as *mut u8, self.vec.iov_len as usize) }
+    }
+
+    #[inline]
+    fn as_mut_slice(&mut self) -> &mut [u8] {
+        unsafe {
+            slice::from_raw_parts_mut(self.vec.iov_base as *mut u8, self.vec.iov_len as usize)
+        }
     }
 }
 
@@ -1031,7 +1064,7 @@ impl<'a> Deref for IoSliceMut<'a> {
 
     #[inline]
     fn deref(&self) -> &[u8] {
-        self.0.as_slice()
+        self.as_slice()
     }
 }
 
@@ -1039,7 +1072,7 @@ impl<'a> Deref for IoSliceMut<'a> {
 impl<'a> DerefMut for IoSliceMut<'a> {
     #[inline]
     fn deref_mut(&mut self) -> &mut [u8] {
-        self.0.as_mut_slice()
+        self.as_mut_slice()
     }
 }
 
@@ -1051,7 +1084,10 @@ impl<'a> DerefMut for IoSliceMut<'a> {
 #[stable(feature = "iovec", since = "1.36.0")]
 #[derive(Copy, Clone)]
 #[repr(transparent)]
-pub struct IoSlice<'a>(sys::io::IoSlice<'a>);
+pub struct IoSlice<'a> {
+    vec: iovec,
+    _p: PhantomData<&'a [u8]>,
+}
 
 #[stable(feature = "iovec-send-sync", since = "1.44.0")]
 unsafe impl<'a> Send for IoSlice<'a> {}
@@ -1062,7 +1098,7 @@ unsafe impl<'a> Sync for IoSlice<'a> {}
 #[stable(feature = "iovec", since = "1.36.0")]
 impl<'a> fmt::Debug for IoSlice<'a> {
     fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Debug::fmt(self.0.as_slice(), fmt)
+        fmt::Debug::fmt(self.as_slice(), fmt)
     }
 }
 
@@ -1075,7 +1111,13 @@ impl<'a> IoSlice<'a> {
     #[stable(feature = "iovec", since = "1.36.0")]
     #[inline]
     pub fn new(buf: &'a [u8]) -> IoSlice<'a> {
-        IoSlice(sys::io::IoSlice::new(buf))
+        IoSlice {
+            vec: iovec {
+                iov_base: buf.as_ptr() as *mut u8 as *mut c_void,
+                iov_len: buf.len() as iov_len_t,
+            },
+            _p: PhantomData,
+        }
     }
 
     /// Advance the internal cursor of the slice.
@@ -1127,9 +1169,26 @@ impl<'a> IoSlice<'a> {
 
         let bufs = &mut bufs[remove..];
         if !bufs.is_empty() {
-            bufs[0].0.advance(n - accumulated_len)
+            bufs[0].advance_self(n - accumulated_len)
         }
         bufs
+    }
+
+    #[inline]
+    fn advance_self(&mut self, n: usize) {
+        if (self.vec.iov_len as usize) < n {
+            panic!("advancing IoSlice beyond its length");
+        }
+
+        unsafe {
+            self.vec.iov_len -= n as iov_len_t;
+            self.vec.iov_base = self.vec.iov_base.add(n);
+        }
+    }
+
+    #[inline]
+    fn as_slice(&self) -> &[u8] {
+        unsafe { slice::from_raw_parts(self.vec.iov_base as *mut u8, self.vec.iov_len as usize) }
     }
 }
 
@@ -1139,7 +1198,7 @@ impl<'a> Deref for IoSlice<'a> {
 
     #[inline]
     fn deref(&self) -> &[u8] {
-        self.0.as_slice()
+        self.as_slice()
     }
 }
 
